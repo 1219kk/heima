@@ -8,27 +8,27 @@
             round
             width="1.76rem"
             height="1.76rem"
-            src="https://img2.baidu.com/it/u=3934336498,2781934529&fm=253&fmt=auto&app=138&f=JPEG?w=400&h=400"
+            :src="userInfo.photo"
           />
-          <span>阿尼亚</span>
+          <span>{{ userInfo.name }}</span>
         </div>
         <div class="button">编辑资料</div>
       </div>
       <ul class="list">
         <li>
-          <p>8</p>
+          <p>{{ userInfo.art_count }}</p>
           <p>头条</p>
         </li>
         <li>
-          <p>88</p>
+          <p>{{ userInfo.follow_count }}</p>
           <p>关注</p>
         </li>
         <li>
-          <p>88</p>
+          <p>{{ userInfo.fans_count }}</p>
           <p>粉丝</p>
         </li>
         <li>
-          <p>88</p>
+          <p>{{ userInfo.like_count }}</p>
           <p>获赞</p>
         </li>
       </ul>
@@ -69,11 +69,25 @@
 </template>
 
 <script>
+import { getUserInfo } from '@/api/user'
 import { mapState } from 'vuex'
 export default {
-  created () { },
+  name: 'My',
+  async created () {
+    if (this.user && this.user.token) {
+      try {
+        const res = await getUserInfo()
+        console.log('res', res)
+        this.userInfo = res.data.data
+      } catch (err) {
+        console.log(err)
+      }
+    }
+  },
   data () {
-    return {}
+    return {
+      userInfo: {}
+    }
   },
   methods: {
     async logout () {
