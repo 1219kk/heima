@@ -1,6 +1,6 @@
 <template>
   <div>
-    <van-nav-bar title="登录">
+    <van-nav-bar title="登录" @click-left="$router.back()">
       <!-- <van-icon name="cross" slot="left" /> -->
       <!-- <template v-slot:left> <van-icon name="cross" /> </template> -->
       <template #left> <van-icon name="cross" /> </template>
@@ -75,7 +75,12 @@ export default {
         const res = await login(values)
         console.log(res)
         this.$store.commit('setUser', res.data.data)
+        this.$toast.success('登录成功')
+        setTimeout(() => {
+          this.$router.push({ path: 'my' })
+        }, 2000)
       } catch (err) {
+        this.$toast.fail('登录失败,账号或密码错误')
         console.log(err)
       }
     },
@@ -86,7 +91,7 @@ export default {
         // api
         try {
           await getSmsCode(this.mobile)
-          this.$$toast.success('发送成功')
+          this.$toast.success('发送成功')
         } catch (err) {
           console.log(err)
           this.$toast.fail('发送失败，请重试')
