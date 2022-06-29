@@ -26,7 +26,15 @@
       :style="{ height: '100%', paddingTop: '1.1rem' }"
       close-icon-position="top-right"
     >
-      <ChannelPanel :channels="channels"></ChannelPanel>
+      <ChannelPanel
+        :channels="channels"
+        :active="active"
+        @change-active="
+          active = $event;
+          isChannelPanelShow = false;
+        "
+        @del-event="active = $event"
+      ></ChannelPanel>
     </van-popup>
   </div>
 </template>
@@ -114,5 +122,9 @@ export default {
   top: 92px;
   z-index: 1;
   border-bottom: 1px solid #edeff3;
+}
+/deep/.van-pull-refresh {
+  height: calc(100vh - 274px);
+  overflow: auto;
 }
 </style>

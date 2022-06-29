@@ -13,3 +13,9 @@ export const getArticleList = ({ channel_id, timestamp }) => {
     params: { channel_id, timestamp }
   })
 }
+// 获取所有频道列表
+export const getAllArticleList = () => {
+  return request({
+    url: 'channels'
+  })
+}
