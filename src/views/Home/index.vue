@@ -1,20 +1,118 @@
 <template>
-  <div>首页</div>
+  <div>
+    <van-nav-bar fixed>
+      <template #title>
+        <van-button type="info" icon="search" class="search-btn"
+          >搜索</van-button
+        >
+      </template>
+    </van-nav-bar>
+    <van-tabs v-model="active" animated>
+      <van-tab :title="item.name" v-for="item in channels" :key="item.id">
+        <ArticleList :id="item.id"></ArticleList>
+      </van-tab>
+
+      <template #nav-right>
+        <div class="menu" @click="isChannelPanelShow = true">
+          <i class="toutiao toutiao-gengduo"></i>
+        </div>
+        <div class="menu1"></div>
+      </template>
+    </van-tabs>
+    <van-popup
+      v-model="isChannelPanelShow"
+      closeable
+      position="bottom"
+      :style="{ height: '100%', paddingTop: '1.1rem' }"
+      close-icon-position="top-right"
+    >
+      <ChannelPanel :channels="channels"></ChannelPanel>
+    </van-popup>
+  </div>
 </template>
 
 <script>
+import ArticleList from '@/components/ArticleList.vue'
+import ChannelPanel from './components/ChannelPanel.vue'
+import { getMyChannels } from '@/api/home'
 export default {
-  created () { },
-  data () {
-    return {}
+  name: 'Home',
+  created () {
+    this.getMyChannels()
   },
-  methods: {},
+  data () {
+    return {
+      active: 0,
+      channels: [],
+      isChannelPanelShow: false
+    }
+  },
+  methods: {
+    async getMyChannels () {
+      try {
+        const res = await getMyChannels()
+        console.log('res', res)
+        this.channels = res.data.data.channels
+      } catch (err) {
+        console.log(err)
+      }
+    }
+  },
   computed: {},
   watch: {},
   filters: {},
-  components: {}
+  components: { ArticleList, ChannelPanel }
 }
 </script>
 
-<style scoped lang="less">
+<style scoped lang='less'>
+.search-btn {
+  width: 555px;
+  height: 64px;
+  background-color: rgba(255, 255, 255, 0.2);
+  border-radius: 32px;
+}
+/deep/ .van-nav-bar__title {
+  //去除css的默认样式
+  max-width: unset;
+}
+/deep/ .van-tabs__wrap--scrollable .van-tab {
+  padding: 0 69px;
+  border-right: 1px solid #edeff3;
+}
+/deep/ .van-tabs__line {
+  width: 31px;
+  height: 6px;
+  background-color: #3296fa;
+  border-radius: 3px;
+}
+.menu {
+  min-width: 100px;
+  height: 82px;
+  // background-color:pink;
+  background-color: rgba(255, 255, 255, 0.9);
+  position: fixed;
+  // 距离右边为0
+  right: 0;
+  text-align: center;
+  line-height: 82px;
+  .toutiao {
+    font-size: 32px;
+  }
+}
+// menu1没有脱离标准流  相当于占位
+.menu1 {
+  min-width: 100px;
+  height: 82px;
+  // background-color: pink;
+  background-color: rgba(255, 255, 255, 0.9);
+}
+/deep/.van-tabs__wrap {
+  // 脱标
+  width: 750px;
+  position: fixed;
+  top: 92px;
+  z-index: 1;
+  border-bottom: 1px solid #edeff3;
+}
 </style>
