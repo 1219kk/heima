@@ -1,4 +1,5 @@
-1.新建 template 出错的时候 -找错添加到 eslintrc.js.
-2.拦截器：一堆的 ajax 都要写就可以提取到拦截器里面
-----axios --->官网搜拦截器
-interceptors-->拦截器
+---新建 template 出错的时候 -找错添加到 eslintrc.js.
+---拦截器：一堆的 ajax 都要写就可以提取到拦截器里面
+----axios --->官网搜拦截器-- interceptors-->拦截器
+---除去 css 默认样式 --->unset --color font 开头的可以继承
+--day.js -- 时间

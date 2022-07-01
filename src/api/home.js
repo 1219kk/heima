@@ -19,3 +19,13 @@ export const getAllArticleList = () => {
     url: 'channels'
   })
 }
+// 频道数据持久化
+export const savaChannels = (channels) => {
+  return request({
+    url: 'user/channels',
+    method: 'PUT',
+    data: {
+      channels
+    }
+  })
+}

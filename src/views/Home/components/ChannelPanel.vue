@@ -47,7 +47,9 @@
 </template>
 
 <script>
-import { getAllArticleList } from '@/api/home'
+import { setItem } from '@/utils/storage'
+import { getAllArticleList, savaChannels } from '@/api/home'
+const CHANNELS = 'CHANNELS'
 export default {
   name: 'ChannelPanel',
   props: {
@@ -83,6 +85,7 @@ export default {
     },
     onClick (index) {
       if (this.isCloseShow) {
+        if (index === 0) return // 推荐不能删除 排除
         // 删除
         const obj = this.channels[index]
         this.channels.splice(index, 1)
@@ -97,7 +100,30 @@ export default {
     }
   },
   computed: {},
-  watch: {},
+  watch: {
+    channels: {
+      async handler (newVal) {
+        if (this.$store.state.user && this.$store.state.user.token) { // 登录过
+          console.log(111)
+          const arr = []
+          newVal.forEach((item, index) => {
+            arr.push({ id: item.id, seq: index })
+          })
+          console.log(arr)
+          try {
+            const res = await savaChannels(arr)
+            console.log(res)
+          } catch (err) {
+            console.log(err)
+          }
+        } else { // 没有登录
+          setItem(CHANNELS, newVal)
+        }
+        // console.log(newVal)
+      },
+      deep: true // 深度监听
+    }
+  },
   filters: {},
   components: {}
 }
