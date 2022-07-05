@@ -1,7 +1,12 @@
 <template>
   <div class="article-container">
     <!-- 导航栏 -->
-    <van-nav-bar class="page-nav-bar" left-arrow title="黑马头条"></van-nav-bar>
+    <van-nav-bar
+      class="page-nav-bar"
+      left-arrow
+      title="黑马头条"
+      @click-left="$router.back()"
+    ></van-nav-bar>
     <!-- /导航栏 -->
 
     <div class="main-wrap">
@@ -56,6 +61,12 @@
             v-html="article.content"
           ></div>
           <van-divider>正文结束</van-divider>
+          <ArticleComment
+            :source="article.art_id"
+            type="a"
+            @set-count="count = $event"
+            :commentList="commentList"
+          ></ArticleComment>
         </div>
         <!-- /加载完成-文章详情 -->
 
@@ -78,10 +89,15 @@
 
     <!-- 底部区域 -->
     <div class="article-bottom" v-if="!isLoading && !!article.art_id">
-      <van-button class="comment-btn" type="default" round size="small"
+      <van-button
+        class="comment-btn"
+        type="default"
+        round
+        size="small"
+        @click="addCommentShow = true"
         >写评论</van-button
       >
-      <van-icon name="comment-o" badge="123" color="#777" />
+      <van-icon name="comment-o" :badge="count" color="#777" />
       <!-- <CollectArticle
         :is_collected="article.is_collected"
         @update:is_collected="article.is_collected"
@@ -100,18 +116,32 @@
         title="立即分享给好友"
         :options="options"
       />
+      <van-popup v-model="addCommentShow" position="bottom">
+        <!-- //每次关闭销毁组件 每次开打重新创建mounted就好再执行一次 -->
+        <!-- 接收以后发送给addcomment -->
+        <AddComment
+          v-if="addCommentShow"
+          :target="article_id"
+          @add-comment="
+            commentList.unshift($event);
+            addCommentShow = false;
+          "
+        ></AddComment>
+      </van-popup>
     </div>
     <!-- /底部区域 -->
   </div>
 </template>
 
 <script>
+import AddComment from './components/AddComment.vue'
+import ArticleComment from './components/ArticleComment.vue'
 import 'github-markdown-css'
 import { ImagePreview } from 'vant'
 import { getArticle } from '@/api/article'
 export default {
   name: 'ArticleIndex',
-  components: {},
+  components: { ArticleComment, AddComment },
   props: {
     article_id: {
       type: [Number, String],
@@ -130,7 +160,10 @@ export default {
         { name: '复制链接', icon: 'link' },
         { name: '分享海报', icon: 'poster' },
         { name: '二维码', icon: 'qrcode' }
-      ]
+      ],
+      count: null,
+      addCommentShow: false,
+      commentList: []
     }
   },
   computed: {},
