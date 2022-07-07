@@ -48,7 +48,7 @@ const CHANNELS = 'CHANNELS'
 export default {
   name: 'Home',
   created () {
-    this.getMyChannels()
+    this.getMyChannels1()
   },
   data () {
     return {
@@ -58,7 +58,7 @@ export default {
     }
   },
   methods: {
-    async getMyChannels () {
+    async getMyChannels1 () {
       const channels = getItem(CHANNELS)
       if (!(this.$store.state.user && this.$store.state.user.token) && channels) {
         this.channels = channels

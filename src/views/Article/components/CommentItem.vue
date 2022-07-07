@@ -1,4 +1,5 @@
 <template>
+  <!-- 单独的评论 -->
   <van-cell>
     <van-image
       slot="icon"
@@ -13,7 +14,13 @@
       <p style="color: #363636">{{ item.content }}</p>
       <p>
         <span style="margin-right: 10px">{{ item.pubdate | dateformat }}</span>
-        <van-button size="mini" type="default">回复</van-button>
+        <!--  @click="$emit('replay-show', true)"  是articlecomment的子 -->
+        <van-button
+          size="mini"
+          type="default"
+          @click="$emit('replay-show', item)"
+          >回复</van-button
+        >
       </p>
     </div>
     <van-loading v-if="isLoading"></van-loading>
